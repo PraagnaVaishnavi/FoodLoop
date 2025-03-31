@@ -1,11 +1,11 @@
-const API_URL = "https://yourbackend.com/api/auth"; // Replace with actual backend URL
+const API_URL = "http://localhost:5000/api/auth";
 
-export const signupUser = async (email, password) => {
+export const signupUser = async (name, email, password, role) => {
   try {
     const response = await fetch(`${API_URL}/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ name, email, password, role }),
     });
     return response.json();
   } catch (error) {
@@ -22,11 +22,11 @@ export const loginUser = async (email, password) => {
       body: JSON.stringify({ email, password }),
     });
     const data = await response.json();
-    
+
     if (data.token) {
       localStorage.setItem("token", data.token); // Store JWT token
     }
-    
+
     return data;
   } catch (error) {
     console.error("Login error:", error);
