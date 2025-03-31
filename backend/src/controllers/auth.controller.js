@@ -11,14 +11,12 @@ export const signup = async (req, res) => {
             return res.status(400).json({ error: "User already exists. Please log in." });
         }
 
-        
-
-        // 3️⃣ Create and save new user
+        // Create and save new user
         const user = new User({
             name,
             email,
             password,
-            googleId: "g2",
+            googleId: "g2", // fixing needed : googleID needs to be unique
             role,
         });
 
