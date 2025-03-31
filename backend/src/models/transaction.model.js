@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
 
@@ -14,4 +14,4 @@ const donationTransactionSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = model('Transaction', donationTransactionSchema);
+export default model('Transaction', donationTransactionSchema);

@@ -1,6 +1,9 @@
-const express = require('express');
-const { createTransaction, getTransactions } = require('../controllers/transactions.controller');
+import express from 'express';
+import { createTransaction, getTransactions } from '../controllers/transactions.controller.js';  // Updated to ES module import
+
 const router = express.Router();
+
 router.post('/create', createTransaction);
 router.get('/list', getTransactions);
-module.exports = router;
+
+export default router;  // Export as default

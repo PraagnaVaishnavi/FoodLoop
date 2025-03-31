@@ -1,4 +1,4 @@
-exports.claimDonation = async (req, res) => {
+export const claimDonation = async (req, res) => {
     try {
         const donation = await Donation.findById(req.params.id);
         if (!donation || donation.status !== 'pending') {

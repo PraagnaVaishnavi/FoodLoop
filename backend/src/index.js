@@ -1,19 +1,19 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const http = require('http');
-const { Server } = require('socket.io');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import http from 'http';
+// import { Server } from 'socket.io';
+import connectDB from './utils/db.connect.js'; // Ensure correct import path
 
 // Importing Routes
-const authRoutes = require('./routes/auth');
-const donationRoutes = require('./routes/donations');
-const ngoRoutes = require('./routes/ngo');
+import authRoutes from './routes/auth.routes.js';
+import donationRoutes from './routes/donations.routes.js';
+import ngoRoutes from './routes/ngo.routes.js';
 
 dotenv.config();
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: '*' } });
+// const io = new Server(server, { cors: { origin: '*' } });
 
 // Middleware
 app.use(cors());
@@ -25,24 +25,21 @@ app.use('/api/donations', donationRoutes);
 app.use('/api/ngo', ngoRoutes);
 
 // Real-time Donation Tracking
-io.on('connection', (socket) => {
-    console.log('A user connected');
+// io.on('connection', (socket) => {
+//     console.log('A user connected');
 
-    socket.on('newDonation', (donation) => {
-        io.emit('updateDonations', donation);
-    });
+//     socket.on('newDonation', (donation) => {
+//         io.emit('updateDonations', donation);
+//     });
 
-    socket.on('disconnect', () => {
-        console.log('User disconnected');
-    });
-});
+//     socket.on('disconnect', () => {
+//         console.log('User disconnected');
+//     });
+// });
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => console.log('✅ MongoDB Connected'))
-  .catch(err => console.error('❌ MongoDB Connection Error:', err));
+// **Connect to MongoDB using connectDB function**
+connectDB();
 
+// Server Listener
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

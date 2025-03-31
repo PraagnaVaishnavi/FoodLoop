@@ -1,6 +1,6 @@
-const Donation = require('../models/listing.model');
+import Donation from '../models/listing.model.js';
 
-exports.createDonation = async (req, res) => {
+export const createDonation = async (req, res) => {
     try {
         const donation = new Donation({ ...req.body, donor: req.user.userId });
         await donation.save();
@@ -10,7 +10,7 @@ exports.createDonation = async (req, res) => {
     }
 };
 
-exports.getDonations = async (req, res) => {
+export const getDonations = async (req, res) => {
     try {
         const donations = await Donation.find({ status: 'pending' });
         res.json(donations);

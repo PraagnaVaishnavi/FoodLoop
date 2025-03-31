@@ -1,1 +1,1 @@
-export const DB_NAME= 'foodloop'
+export const DB_NAME = "foodloop";

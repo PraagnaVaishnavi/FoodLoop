@@ -1,6 +1,9 @@
-const express = require('express');
-const { claimDonation } = require('../controllers/ngo.controller');
-const { authMiddleware } = require('../middleware/authMiddleware');
+import express from 'express';
+import { claimDonation } from '../controllers/ngo.controller.js';  // Updated to ES module import
+import { authMiddleware } from '../middleware/authMiddleware.js';  // Updated to ES module import
+
 const router = express.Router();
+
 router.post('/claim/:id', authMiddleware, claimDonation);
-module.exports = router;
+
+export default router;  // Export as default

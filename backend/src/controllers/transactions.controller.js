@@ -1,6 +1,4 @@
-const Transaction = require('../models/transaction.model');
-
-exports.createTransaction = async (req, res) => {
+export const createTransaction = async (req, res) => {
     try {
         const transaction = new Transaction({ ...req.body });
         await transaction.save();
@@ -10,7 +8,7 @@ exports.createTransaction = async (req, res) => {
     }
 };
 
-exports.getTransactions = async (req, res) => {
+export const getTransactions = async (req, res) => {
     try {
         const transactions = await Transaction.find().populate('donor NGO volunteer');
         res.json(transactions);
