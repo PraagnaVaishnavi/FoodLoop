@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const { Schema, model } = mongoose;
 
@@ -6,12 +6,12 @@ const donationTransactionSchema = new Schema(
   {
     foodListing: { type: Schema.Types.ObjectId, ref: 'FoodListing', required: true },
     donor: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    NGO: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    volunteer: { type: Schema.Types.ObjectId, ref: 'User' },
-    transactionHash: { type: String }, // Blockchain transaction hash once confirmed
-    confirmed: { type: Boolean, default: false },
+    ngo: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    volunteer: { type: Schema.Types.ObjectId, ref: 'User', default: null }, // Optional
+    transactionHash: { type: String, default: null }, // Stores blockchain transaction hash
+    confirmed: { type: Boolean, default: false }, // Indicates successful blockchain confirmation
   },
   { timestamps: true }
 );
 
-export default model('Transaction', donationTransactionSchema);
+module.exports = model('Transaction', donationTransactionSchema);

@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const { Schema, model } = mongoose;
 
@@ -7,42 +8,29 @@ const userSchema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    googleId: {
-        type: String,
-        unique: true,
-        sparse: true, 
-      },
+    googleId: { type: String, unique: true, sparse: true }, 
     role: { type: String, enum: ['donor', 'NGO', 'volunteer', 'admin'], required: true },
 
-    // Additional details for a donor (especially restaurants)
+    // Additional donor details (if applicable)
     organizationName: { type: String },
     contactNumber: { type: String },
     address: { type: String },
     website: { type: String },
 
-    // Historical tracking fields for restaurants(Add more as needed)
+    // Donation history tracking
     averageMonthlyDonations: { type: Number, default: 0 },
     totalDonations: { type: Number, default: 0 },
-    lastDonationDate: { type: Date },
-
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    lastDonationDate: { type: Date }
   },
-  { timestamps: true }
+  { timestamps: true } // Automatically manages createdAt & updatedAt
 );
 
-userSchema.pre('save', function (next) {
-  this.updatedAt = Date.now();
+// Hash password before saving
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
-  
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-  });
-
 const User = model('User', userSchema);
-
-export default User;
+module.exports = User;
