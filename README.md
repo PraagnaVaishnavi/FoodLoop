@@ -2,7 +2,7 @@
 <!-- README.md -->
 
 <div align="center">
-  <img src="./assets/favicon.png" alt="FoodLoop Logo" width="200"/>
+  <img src="./frontend/public/favicon.png" alt="FoodLoop Logo" width="200"/>
   <h1><b>🍱 FoodLoop</b></h1>
   <img src="https://readme-typing-svg.herokuapp.com?color=45ffaa&size=35&width=900&height=80&lines=Where+Surplus+meets+Purpose......"/>
 
