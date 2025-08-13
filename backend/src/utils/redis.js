@@ -2,20 +2,16 @@ import { createClient } from 'redis';
 
 const client = createClient({
     username: 'default',
-    password: 'ckYEd7BOJbDWnN0IKCBHfTy0SafwIFiv',
+    password: '4fF3Do2J0C4FeCAwptyOkVs0qh4wLbqv',
     socket: {
-        host: 'redis-11934.c212.ap-south-1-1.ec2.redns.redis-cloud.com',
-        port: 11934,
-        // tls: true
+        host: 'redis-11900.c93.us-east-1-3.ec2.redns.redis-cloud.com',
+        port: 11900,
+        tls: false
     }
 });
 
 client.on('error', err => console.log('Redis Client Error', err));
 
 await client.connect();
-
-await client.set('foo', 'bar');
-const result = await client.get('foo');
-console.log(result)  // >>> bar
 
 export default client;
