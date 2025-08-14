@@ -1,6 +1,6 @@
 import Web3 from "web3";
 import dotenv from "dotenv";
-import foodLoopAbi from "../../blockchain/build/contracts/FoodLoop.json" with { type: "json" };
+import foodLoopAbi from "../blockchain/build/contracts/FoodLoop.json" with { type: "json" };
 
 import fs from "fs";
 import path from "path";
@@ -17,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Resolve deployedAddresses.json correctly
-const deployedPath = path.resolve(__dirname, "../../blockchain/deployedAddresses.json");
+const deployedPath = path.resolve(__dirname, "../blockchain/deployedAddresses.json");
 
 // Read contract addresses (FoodLoop + NFT)
 let foodLoopAddress, nftAddress;

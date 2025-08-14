@@ -10,6 +10,7 @@ import { triggerScheduledDonations } from "./controllers/recurring.controller.js
 // Importing Routes
 import authRoutes from "./routes/auth.routes.js";
 import donationRoutes from "./routes/donations.routes.js";
+import moneyDonationRoutes from "./routes/moneyDonation.routes.js";
 import ngoRoutes from "./routes/ngo.routes.js";
 import transactionRoutes from "./routes/transactions.routes.js";
 import impactRoutes from "./routes/impact.routes.js";
@@ -51,6 +52,8 @@ app.use("/api/joyloop", joyloopRoutes);
 app.use("/api/request", requestRoutes);
 app.use("/api/recurring", recurringRoutes);
 app.use("/api/pack", packRoutes);
+app.use("/api/money-donations", moneyDonationRoutes);
+
 
 // Real-time Donation Tracking
 // io.on('connection', (socket) => {

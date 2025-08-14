@@ -1,0 +1,16 @@
+name: FoodLoop Pending Donations Cleanup
+
+on:
+  schedule:
+    # Run every day at 12 AM UTC
+    - cron: '0 0 * * *'
+
+jobs:
+  pending-cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Pending Donations Cleanup
+        run: |
+          echo "Running Pending Donations Cleanup..."
+          curl -X POST https://your-app.onrender.com/api/money-donations/cleanup
