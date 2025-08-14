@@ -45,15 +45,7 @@
 -  Displays user-submitted content to inspire others.
 -  Top Donors Leaderboard
 
----
 
-## 🤖 AI & Automation
-
-- **False Listing Detection** using image classification to eliminate spoiled or fake entries.
-- **Predictive Surplus Forecasting** based on donation trends.
-- **Smart Matching** using ML-based urgency and geo-prioritization.
-
----
 
 ## 💼 Economic Model
 
@@ -110,13 +102,7 @@ git clone https://github.com/Hitanshi-Singh/FoodLoop.git
 npm install
 ```
 
-3. Set up environment variables
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
-
-4. Start the development server
+3. Start the development server
 ```bash
 npm run dev
 ```
@@ -132,17 +118,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For support, reach out to us on email.
 
----
-
-### 🌍 Connect With Us
-
-### 📧 Email: TBA
-
-### 🐦 Twitter: TBA
-
-### 💼 LinkedIn: TBA
-
----
 
 ## 👥 Meet the Team – Tech Sangam
 
