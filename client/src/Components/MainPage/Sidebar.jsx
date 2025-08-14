@@ -11,6 +11,7 @@ import {
   IconLogout,
   IconShieldCheck,
   IconSalad,
+  IconCoinRupee
 } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
@@ -55,6 +56,11 @@ export function FoodDistributionSidebar() {
       label: "Donate Food",
       href: "/donate",
       icon: <IconHeartHandshake className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+    },
+    {
+      label: "Donate Money",
+      href: "/donatemoney",
+      icon: <IconCoinRupee className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
     {
       label: "Delivery Status",

@@ -12,6 +12,7 @@ import Onboarding from "../pages/Onboarding.jsx";
 import DonationMap from "../pages/HeatMap.jsx";
 import DeliveryTimeline from "../pages/DeliveryTimeline.jsx";
 import DonationForm from "../Components/MainPage/NewDonation.jsx";
+import DonateMoney from "../pages/DonateMoney"; // Create this page
 import AdminDashboard from "../pages/AdminDashboard.jsx";
 import DonationList from "../pages/DonationListing.jsx";
 import FoodDonationRequestForm from "../Components/ui/RequestForm.jsx";
@@ -34,6 +35,7 @@ const AppRoutes = () => {
         <Route path="/map" element={<DonationMap />} />
         <Route path="/orderstatus" element={<DeliveryTimeline  currentStep={5}/>} />
         <Route path="/donate" element={<DonationForm/>} />
+        <Route path="/donatemoney" element={<DonateMoney />} />
         <Route path="/Listings" element={<DonationList  /> } /> 
         <Route path="/request" element={<FoodDonationRequestForm/>} />
         <Route path="/chat" element={<ChatbotWidget/>} />
