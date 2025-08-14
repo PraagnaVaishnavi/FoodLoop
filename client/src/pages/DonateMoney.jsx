@@ -364,37 +364,6 @@ razorpay.on('checkout.dismiss', function(){
             </div>
           </div>
         </div>
-        
-        {/* UPI Payment Option */}
-        <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
-          <h3 className="text-xl font-semibold text-colour4 mb-4 font-merriweather">Pay Directly via UPI</h3>
-          <p className="text-gray-700 mb-6">
-            Scan the QR code or use our UPI ID to make a direct donation
-          </p>
-          
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-            <div className="bg-colour2 p-4 rounded-lg border border-colour3 border-opacity-30 max-w-xs">
-              <div className="w-48 h-48 bg-gray-200 mx-auto mb-3 flex items-center justify-center">
-                {/* This would be replaced with an actual QR code image */}
-                <span className="text-gray-500">QR Code Placeholder</span>
-              </div>
-              <p className="text-sm text-gray-600">Scan to pay directly</p>
-            </div>
-            
-            <div>
-              <div className="bg-colour2 p-4 rounded-lg border border-colour3 border-opacity-30 mb-4">
-                <p className="text-sm text-gray-600 mb-1">UPI ID:</p>
-                <p className="font-medium text-colour4 text-lg">foodloop@upi</p>
-              </div>
-              
-              <div className="flex gap-2 justify-center">
-                <img src="/gpay-icon.png" alt="Google Pay" className="h-8 w-8 object-contain opacity-70 hover:opacity-100" />
-                <img src="/phonepe-icon.png" alt="PhonePe" className="h-8 w-8 object-contain opacity-70 hover:opacity-100" />
-                <img src="/paytm-icon.png" alt="Paytm" className="h-8 w-8 object-contain opacity-70 hover:opacity-100" />
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
