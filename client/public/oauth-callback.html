@@ -7,6 +7,9 @@
   <body>
     <script src="/env.js"></script>
     <script>
+      if (!window.ENV || !window.ENV.BACKEND_API) {
+  alert("Backend URL not found. Check env.js");
+}
        const API_URL = window.ENV.BACKEND_API;
       const params = new URLSearchParams(window.location.search);
       const code = params.get("code");
