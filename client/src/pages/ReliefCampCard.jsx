@@ -11,42 +11,44 @@ const ReliefCampCard = ({ camp }) => {
   const formattedStartDate = new Date(startDate).toLocaleString();
 
   return (
-    <div className="max-w-sm w-full bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="w-full bg-white shadow-lg rounded-lg overflow-hidden flex flex-col h-[420px]">
       {/* Card Header */}
       <div className="bg-gray-800 text-white p-4">
-        <h3 className="text-xl font-semibold">{eventType} Relief Camp</h3>
+        <h3 className="text-lg font-semibold truncate">
+          {eventType} Relief Camp
+        </h3>
       </div>
 
       {/* Card Body */}
-      <div className="p-4 space-y-4">
+      <div className="flex-1 p-4 space-y-3 overflow-hidden">
         {/* Location */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 text-sm">
           <FaMapMarkerAlt className="text-green-500" />
-          <span className="text-gray-700">
-            Location: {location.coordinates[0]}, {location.coordinates[1]}
+          <span className="text-gray-700 truncate">
+            {location.coordinates[0]}, {location.coordinates[1]}
           </span>
         </div>
 
         {/* Start Date */}
-        <div className="text-gray-700">
+        <div className="text-gray-700 text-sm">
           <span className="font-semibold">Start Date: </span>
           {formattedStartDate}
         </div>
 
         {/* Resources Needed */}
-        <div className="text-gray-700">
+        <div className="text-gray-700 text-sm line-clamp-2">
           <span className="font-semibold">Resources Needed: </span>
           {resourcesNeeded}
         </div>
 
         {/* Demand Prediction */}
-        <div className="text-gray-700">
+        <div className="text-gray-700 text-sm">
           <span className="font-semibold">Demand Prediction: </span>
           <span>{demandPrediction}%</span>
         </div>
 
-        {/* Map (using Leaflet) */}
-        <div className="w-full h-32 mt-4">
+        {/* Map (fixed height) */}
+        <div className="w-full h-32 mt-2 rounded-md overflow-hidden">
           <MapContainer
             center={location.coordinates}
             zoom={13}
