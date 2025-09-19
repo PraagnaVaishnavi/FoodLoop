@@ -1,9 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { FoodDistributionSidebar } from "../Components/MainPage/Sidebar";
-import Header from "../Components/Header"; 
-import ButtonWithAvatar from "../Components/MainPage/HoverButton";
-
+import Header from "../Components/Header";
 import { FoodDonationGlobe } from "../Components/MainPage/globe";
 import {
   getDashboardStats,
@@ -11,30 +9,30 @@ import {
   getRecentDonations,
   getUpcomingDistributions,
 } from "../services/dashboardService";
-import { User } from "lucide-react";
 import {
   IconHeartHandshake,
   IconTruckDelivery,
   IconMapPin,
   IconChartBar,
-  IconUsers,
   IconAlertCircle,
 } from "@tabler/icons-react";
 import gsap from "gsap";
-import { useLayoutEffect, useRef } from "react";
-
 import ChatbotWidget from "../Components/ui/ChatbotUI";
+
 const Dashboard = () => {
- 
-  // const [visible, setVisible] = useState(true);
-  // const [lastScrollY, setLastScrollY] = useState(0);
   const comp = useRef(null);
-  const [showPopup, setShowPopup] = useState(false);
   const popupRef = useRef(null);
   const buttonRef = useRef(null);
 
+  const [showPopup, setShowPopup] = useState(false);
+  const [showHeader, setShowHeader] = useState(false); // ✅ header state
 
+  const [stats, setStats] = useState([]);
+  const [alerts, setAlerts] = useState([]);
+  const [recentDonations, setRecentDonations] = useState([]);
+  const [upcomingDistributions, setUpcomingDistributions] = useState([]);
 
+  // Hide popup when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -47,16 +45,11 @@ const Dashboard = () => {
         setShowPopup(false);
       }
     }
-
-    // Add event listener
     document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showPopup]);
 
+  // Intro animation
   useLayoutEffect(() => {
     const introEl = comp.current;
     if (!introEl) return;
@@ -68,14 +61,11 @@ const Dashboard = () => {
         onComplete: () => {
           introEl.style.display = "none";
           introEl.classList.remove("scroll-lock");
+          setShowHeader(true); // ✅ show header after animation
         },
       });
 
-      t1.from("#intro-slider", {
-        xPercent: "-100",
-        duration: 0.5,
-        delay: 0.1,
-      })
+      t1.from("#intro-slider", { xPercent: "-100", duration: 0.5, delay: 0.1 })
         .from(["#title-1", "#title-2", "#title-3"], {
           opacity: 0,
           y: "+=30",
@@ -86,37 +76,28 @@ const Dashboard = () => {
           y: "-=30",
           stagger: 0.2,
         })
-        .to("#intro-slider", {
-          xPercent: "-100",
-          duration: 0.4,
-          opacity: 0,
-        });
+        .to("#intro-slider", { xPercent: "-100", duration: 0.4, opacity: 0 });
     }, comp);
 
     return () => ctx.revert();
   }, []);
 
+  // Responsive globe height
   useEffect(() => {
-    // Ensure the globe container maintains the original aspect ratio
     const globeContainer = document.getElementById("globe-container");
     if (!globeContainer) return;
 
     const handleResize = () => {
       const width = globeContainer.clientWidth;
-      // Using a 1.2 aspect ratio as in the original code
       globeContainer.style.height = `${width * 0.8}px`;
     };
-
-    // Handle initial size
     handleResize();
 
-    // Handle resize events with debounce
     let resizeTimeout;
     const debouncedResize = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(handleResize, 100);
     };
-
     window.addEventListener("resize", debouncedResize);
 
     return () => {
@@ -125,39 +106,16 @@ const Dashboard = () => {
     };
   }, []);
 
-  // useEffect(() => {
-  //     const handleScroll = () => {
-  //       const currentScrollY = window.scrollY;
-
-  //       // If scrolling up, hide the component
-  //       if (currentScrollY < lastScrollY) {
-  //         setVisible(false);
-  //       } else {
-  //         // If scrolling down, show the component
-  //         setVisible(true);
-  //       }
-
-  //       setLastScrollY(currentScrollY);
-  //     };
-
-  //     window.addEventListener('scroll', handleScroll, { passive: true });
-
-  //     return () => {
-  //       window.removeEventListener('scroll', handleScroll);
-  //     };
-  //   }, [lastScrollY]);
-  // Stats for the dashboard
-  const [stats, setStats] = useState([]);
+  // Load dashboard data
   useEffect(() => {
     const loadStats = async () => {
       const data = await getDashboardStats();
-      console.log("Dashboard Stats:", data);
       setStats([
         {
           label: "Total Donations",
           value: data.totalDonations,
           icon: <IconHeartHandshake className="h-6 w-6 text-color-colour1" />,
-          change: "+8.2% from last month", // TODO: optionally make this dynamic
+          change: "+8.2% from last month",
           positive: true,
         },
         {
@@ -185,59 +143,6 @@ const Dashboard = () => {
     };
     loadStats();
   }, []);
-  // const stats = [
-  //   {
-  //     label: "Total Donations",
-  //     value: "8,742 kg",
-  //     icon: <IconHeartHandshake className="h-6 w-6 text-color-colour1" />,
-  //     change: "+8.2% from last month",
-  //     positive: true
-  //   },
-  //   {
-  //     label: "Distribution Routes",
-  //     value: "24 Active",
-  //     icon: <IconTruckDelivery className="h-6 w-6 text-color-colour1" />,
-  //     change: "+2 since last week",
-  //     positive: true
-  //   },
-  //   {
-  //     label: "Coverage Areas",
-  //     value: "32 Regions",
-  //     icon: <IconMapPin className="h-6 w-6 text-color-colour1" />,
-  //     change: "4 new regions added",
-  //     positive: true
-  //   },
-  //   {
-  //     label: "Impact Score",
-  //     value: "97.4%",
-  //     icon: <IconChartBar className="h-6 w-6 text-color-colour1" />,
-  //     change: "+2.1% efficiency",
-  //     positive: true
-  //   },
-  // ];
-
-  // Alerts for the dashboard
-  // const alerts = [
-  //   {
-  //     title: "Low Food Supply in Northeast Region",
-  //     description: "Current supplies will last only 3 more days. Consider redirecting resources.",
-  //     severity: "high",
-  //     time: "2 hours ago"
-  //   },
-  //   {
-  //     title: "New Partner Organization: City Food Bank",
-  //     description: "They've committed to donating 200kg weekly. Setup distribution route.",
-  //     severity: "info",
-  //     time: "Yesterday"
-  //   },
-  //   {
-  //     title: "Transportation Needed for South District",
-  //     description: "Vehicle breakdown reported. Need replacement for tomorrow's route.",
-  //     severity: "medium",
-  //     time: "Yesterday"
-  //   }
-  // ];
-  const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
     const fetchAlerts = async () => {
@@ -247,40 +152,6 @@ const Dashboard = () => {
     fetchAlerts();
   }, []);
 
-  // Recent donations
-  // const recentDonations = [
-  //   {
-  //     organization: "Fresh Harvest Co-op",
-  //     amount: "124 kg",
-  //     type: "Fresh produce",
-  //     timestamp: "2 hours ago"
-  //   },
-  //   {
-  //     organization: "Community Bakery",
-  //     amount: "56 kg",
-  //     type: "Baked goods",
-  //     timestamp: "5 hours ago"
-  //   },
-  //   {
-  //     organization: "Green Fields Farm",
-  //     amount: "210 kg",
-  //     type: "Vegetables & fruits",
-  //     timestamp: "Yesterday"
-  //   },
-  //   {
-  //     organization: "City Restaurant Alliance",
-  //     amount: "88 kg",
-  //     type: "Prepared meals",
-  //     timestamp: "Yesterday"
-  //   },
-  //   {
-  //     organization: "Metro Grocery",
-  //     amount: "175 kg",
-  //     type: "Mixed goods",
-  //     timestamp: "2 days ago"
-  //   }
-  // ];
-  const [recentDonations, setRecentDonations] = useState([]);
   useEffect(() => {
     const fetchRecentDonations = async () => {
       const data = await getRecentDonations();
@@ -289,34 +160,6 @@ const Dashboard = () => {
     fetchRecentDonations();
   }, []);
 
-  // Upcoming distributions
-  // const upcomingDistributions = [
-  //   {
-  //     location: "North District Community Center",
-  //     time: "Today, 2:00 PM",
-  //     peopleServed: "~120 people",
-  //     status: "On schedule"
-  //   },
-  //   {
-  //     location: "Westside Shelter",
-  //     time: "Today, 4:30 PM",
-  //     peopleServed: "~85 people",
-  //     status: "On schedule"
-  //   },
-  //   {
-  //     location: "Easttown Food Pantry",
-  //     time: "Tomorrow, 9:00 AM",
-  //     peopleServed: "~200 people",
-  //     status: "Needs volunteers"
-  //   },
-  //   {
-  //     location: "South Ridge Community",
-  //     time: "Tomorrow, 1:00 PM",
-  //     peopleServed: "~150 people",
-  //     status: "Transport issue"
-  //   }
-  // ];
-  const [upcomingDistributions, setUpcomingDistributions] = useState([]);
   useEffect(() => {
     const fetchUpcoming = async () => {
       const data = await getUpcomingDistributions();
@@ -327,11 +170,15 @@ const Dashboard = () => {
 
   return (
     <>
+      {/* Header appears only after animation */}
+      {showHeader && <Header />}
+
       {/* Intro Animation */}
       <div id="intro" className="relative z-50" ref={comp}>
         <div
           id="intro-slider"
-          className="h-screen p-10 bg-gray-900 text-[#FFA725] absolute top-0 left-0 font-merriweather font-bold w-full flex flex-col gap-10 tracking-tight justify-center items-center"
+          className="h-screen p-10 bg-gray-900 text-[#FFA725] absolute top-0 left-0 
+          font-merriweather font-bold w-full flex flex-col gap-10 tracking-tight justify-center items-center"
         >
           <h1 className="text-4xl md:text-6xl" id="title-1">
             Share with
@@ -344,10 +191,7 @@ const Dashboard = () => {
           </h1>
         </div>
         <div className="h-screen flex bg-[#FFA725] justify-center items-center">
-          <h1
-            id="welcome"
-            className="font-bold text-gray-100 font-merriweather"
-          >
+          <h1 id="welcome" className="font-bold text-gray-100 font-merriweather">
             <img src="./logo.png" alt="FoodShare Logo" />
           </h1>
         </div>
@@ -355,16 +199,13 @@ const Dashboard = () => {
 
       {/* Main Dashboard */}
       <div className="flex w-screen overflow-x-hidden bg-[#FFF5E4]">
-        {/* Container that holds sidebar and content */}
-        <div className="flex w-full flex-1 flex-col overflow-hidden border border-neutral-200 bg-gray-100 md:flex-row dark:border-neutral-700 dark:bg-neutral-800">
-          {/* Sidebar component */}
+        <div className="flex w-full flex-1 flex-col overflow-hidden border 
+          border-neutral-200 bg-gray-100 md:flex-row dark:border-neutral-700 dark:bg-neutral-800">
+
           <FoodDistributionSidebar />
 
-          {/* Main content area */}
           <div className="flex flex-col w-full overflow-y-auto">
-            {/* Header area - FIXED AT TOP OF MAIN CONTENT */}
-            <Header/>
-
+            {/* Globe */}
             <div className="h-[700px] md:h-[800px] relative w-full bg-black overflow-hidden">
               <div
                 className="absolute inset-0 w-full h-full flex flex-col"
@@ -586,11 +427,12 @@ const Dashboard = () => {
                   </a>
                 </div>
               </div>
-              <ChatbotWidget/>
 
-              {/* Footer area */}
+              <ChatbotWidget />
+
+              {/* Footer */}
               <footer className="mt-12 text-center text-sm text-gray-500">
-                <p>© 2025 FoodLoop. All rights reserved.</p>
+                <p>© 2025 MealChain. All rights reserved.</p>
                 <p className="mt-1">Making a difference one meal at a time.</p>
               </footer>
             </div>

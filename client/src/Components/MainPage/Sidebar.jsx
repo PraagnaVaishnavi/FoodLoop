@@ -11,21 +11,19 @@ import {
   IconLogout,
   IconShieldCheck,
   IconSalad,
-  IconCoinRupee
+  IconCoinRupee,
 } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { Img } from "react-image";
-import { cn } from "../../lib/utils";
 import { Box, Modal, Fade } from "@mui/material";
-import FoodDonationRequestForm from "../ui/RequestForm"; 
+import FoodDonationRequestForm from "../ui/RequestForm";
 
 export function FoodDistributionSidebar() {
   const [open, setOpen] = useState(false);
   const [userAvatar, setUserAvatar] = useState("/api/placeholder/50/50");
   const [userRole, setUserRole] = useState("guest");
 
-  // Modal state
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const handleOpenRequestModal = () => setIsRequestModalOpen(true);
   const handleCloseRequestModal = () => setIsRequestModalOpen(false);
@@ -33,7 +31,6 @@ export function FoodDistributionSidebar() {
   useEffect(() => {
     try {
       const userRoleFromStorage = localStorage.getItem("userRole");
-      console.log(userRoleFromStorage);
       if (userRoleFromStorage) setUserRole(userRoleFromStorage);
 
       const user = localStorage.getItem("userData");
@@ -47,45 +44,17 @@ export function FoodDistributionSidebar() {
   }, []);
 
   const commonLinks = [
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-      icon: <IconHome className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-    },
-    {
-      label: "Donate Food",
-      href: "/donate",
-      icon: <IconHeartHandshake className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-    },
-    {
-      label: "Donate Money",
-      href: "/donatemoney",
-      icon: <IconCoinRupee className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-    },
-    {
-      label: "Delivery Status",
-      href: "/orderstatus",
-      icon: <IconTruckDelivery className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-    },
-    {
-      label: "Food Map",
-      href: "/map",
-      icon: <IconMapPin className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-    },
-    {
-      label: "Impact Reports",
-      href: "/impact",
-      icon: <IconChartBar className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-      icon: <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-    },
+    { label: "Dashboard", href: "/dashboard", icon: <IconHome className="h-5 w-5 shrink-0" /> },
+    { label: "Donate Food", href: "/donate", icon: <IconHeartHandshake className="h-5 w-5 shrink-0" /> },
+    { label: "Donate Money", href: "/donatemoney", icon: <IconCoinRupee className="h-5 w-5 shrink-0" /> },
+    { label: "Delivery Status", href: "/orderstatus", icon: <IconTruckDelivery className="h-5 w-5 shrink-0" /> },
+    { label: "Food Map", href: "/map", icon: <IconMapPin className="h-5 w-5 shrink-0" /> },
+    { label: "Impact Reports", href: "/impact", icon: <IconChartBar className="h-5 w-5 shrink-0" /> },
+    { label: "Settings", href: "/settings", icon: <IconSettings className="h-5 w-5 shrink-0" /> },
     {
       label: "Logout",
       href: "/logout",
-      icon: <IconLogout className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200 group-hover:text-red-500" />,
+      icon: <IconLogout className="h-5 w-5 shrink-0 group-hover:text-red-500" />,
       className: "group",
       labelClassName: "group-hover:text-red-500",
     },
@@ -97,8 +66,8 @@ export function FoodDistributionSidebar() {
     const donorNGOLink = {
       label: "Request for Food",
       onClick: handleOpenRequestModal,
-      icon: <IconSalad className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200 group-hover:text-red-500" />,
-      labelClassName: "font-medium text-emerald-600 dark:text-emerald-400",
+      icon: <IconSalad className="h-5 w-5 shrink-0 text-emerald-600" />,
+      labelClassName: "font-medium text-emerald-600",
     };
 
     const dashboardIndex = links.findIndex((link) => link.label === "Dashboard");
@@ -109,9 +78,9 @@ export function FoodDistributionSidebar() {
     const adminLink = {
       label: "Admin Dashboard",
       href: "/admin",
-      icon: <IconShieldCheck className="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400" />,
-      className: "bg-emerald-50 dark:bg-emerald-900/20",
-      labelClassName: "font-medium text-emerald-600 dark:text-emerald-400",
+      icon: <IconShieldCheck className="h-5 w-5 shrink-0 text-emerald-600" />,
+      className: "bg-emerald-50",
+      labelClassName: "font-medium text-emerald-600",
     };
 
     const settingsIndex = links.findIndex((link) => link.label === "Settings");
@@ -124,18 +93,24 @@ export function FoodDistributionSidebar() {
 
   return (
     <>
-      <Sidebar open={open} setOpen={setOpen}>
-        <SidebarBody className="justify-between gap-10">
-          <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
+      <Sidebar
+        open={open}
+        setOpen={setOpen}
+        className={`bg-white shadow-xl border-r-0 transition-all duration-100 fixed top-0 left-0 z-[9999] ${
+          +   open ? "w-[280px] bg-white" : "w-0 bg-transparent"
+        }`}
+      >
+        <SidebarBody className="flex flex-col justify-between">
+          <div className="flex flex-col">
             {open ? <FoodShareLogo /> : <FoodShareIcon />}
-            <div className="mt-8 flex flex-col gap-2">
+            <div className="mt-6 flex flex-col gap-2">
               {links.map((link, idx) => (
                 <SidebarLink
                   key={idx}
                   link={link}
                   className={link.className || ""}
                   labelClassName={link.labelClassName || ""}
-                  onClick={link.onClick} // 👈 Support modal-triggering
+                  onClick={link.onClick}
                 />
               ))}
             </div>
@@ -179,6 +154,7 @@ export function FoodDistributionSidebar() {
               borderRadius: 2,
               boxShadow: 24,
               p: 4,
+              zIndex: 99999,
             }}
           >
             <FoodDonationRequestForm handleClose={handleCloseRequestModal} />
@@ -190,30 +166,24 @@ export function FoodDistributionSidebar() {
 }
 
 export const FoodShareLogo = () => (
-  <Link
-    to="/"
-    className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
-  >
-    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600">
-      <Img src="/logo.png" className="h-5 w-5 text-white" alt="Logo" />
+  <Link to="/" className="flex items-center space-x-2 py-2">
+    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-600">
+      <Img src="/logo.png" className="h-5 w-5" alt="Logo" />
     </div>
     <motion.span
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="font-medium whitespace-pre text-black dark:text-white"
+      className="font-semibold text-gray-800"
     >
-      FoodLoop
+      MealChain
     </motion.span>
   </Link>
 );
 
 export const FoodShareIcon = () => (
-  <Link
-    to="/"
-    className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
-  >
-    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-600">
-      <Img src="/logo.png" className="h-5 w-5 text-white" alt="Logo" />
+  <Link to="/" className="flex items-center py-2">
+    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-600">
+      <Img src="/logo.png" className="h-5 w-5" alt="Logo" />
     </div>
   </Link>
 );

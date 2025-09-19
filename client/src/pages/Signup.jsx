@@ -67,7 +67,7 @@ const Signup = () => {
         <div className="transform scale-90 relative bg-white/80 backdrop-blur-sm p-8 shadow-lg rounded-lg w-[28rem]">
 
           <form onSubmit={handleSubmit} className="relative z-10">
-            <h2 className="text-2xl font-bold text-center mb-6 text-green-600">Join FoodLoop</h2>
+            <h2 className="text-2xl font-bold text-center mb-6 text-green-600">Join MealChain</h2>
             <button
               type="button"
               onClick={handleGoogleSignIn}

@@ -62,7 +62,7 @@ return (
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="sticky top-0 z-40 bg-[#FFA725] shadow-md">
           <div className="flex items-center justify-between px-6 py-3">
-            <h1 className="text-xl font-bold text-white">FoodLoop Admin Dashboard</h1>
+            <h1 className="text-xl font-bold text-white">MealChain Admin Dashboard</h1>
           </div>
         </header>
         

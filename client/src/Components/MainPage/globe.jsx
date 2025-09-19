@@ -38,12 +38,26 @@ export function FoodDonationGlobe() {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [showDonateModal, setShowDonateModal] = useState(false);
   const [donationAmount, setDonationAmount] = useState(null);
-const [showCustomAmount, setShowCustomAmount] = useState(false);
+  const [showCustomAmount, setShowCustomAmount] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef(null);
+  const globeWrapperRef = useRef(null);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [visibleRegion, setVisibleRegion] = useState(null);
-const regionTimeout = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const regionTimeout = useRef(null);
+
+  // Check for mobile device - extending mobile view to 500px width
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 500);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Add debug logging
   useEffect(() => {
@@ -53,7 +67,7 @@ const regionTimeout = useRef(null);
 
   // Updated globe configuration for food donation theme
   const globeConfig = {
-    pointSize: 4,
+    pointSize: isMobile ? 2.5 : 4, // Smaller points for very small screens
     globeColor: "#1e5631", // Earthy green color
     showAtmosphere: true,
     atmosphereColor: "#FFFFFF",
@@ -72,7 +86,7 @@ const regionTimeout = useRef(null);
     maxRings: 3,
     initialPosition: { lat: 0, lng: 0 }, // Start centered
     autoRotate: true,
-    autoRotateSpeed: 0.3,
+    autoRotateSpeed: isMobile ? 0.15 : 0.3, // Slower rotation for mobile
     onRegionHover: (region) => {
       if (region) {
         // Clear any existing timeout
@@ -84,7 +98,7 @@ const regionTimeout = useRef(null);
         // Only update visibleRegion, not selectedRegion
         setVisibleRegion(region);
       } else {
-        // Mouse moved away - keep showing the current region for 5 seconds
+        // Mouse moved away - keep showing the current region for 2 seconds
         regionTimeout.current = setTimeout(() => {
           setVisibleRegion(null);
           regionTimeout.current = null;
@@ -235,32 +249,57 @@ const regionTimeout = useRef(null);
       description: "Refugee crisis has created food shortages"
     }
   ];
+
+  // Responsive container sizing - optimized for screens up to 500px
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Create a resize observer
-    const resizeObserver = new ResizeObserver((entries) => {
-      const container = entries[0].target;
+    const updateSize = () => {
+      const container = containerRef.current;
+      if (!container) return;
+      
       const width = container.clientWidth;
-      container.style.height = `${width * 0.75}px`;
+      const screenWidth = window.innerWidth;
+      
+      let aspectRatio, minHeight, maxHeight;
+      
+      if (screenWidth <= 500) {
+        // Mobile optimization for screens up to 500px
+        aspectRatio = screenWidth <= 350 ? 1.0 : 0.95; // Taller aspect for very small screens
+        minHeight = Math.max(350, screenWidth * 0.8); // Minimum viable size
+        maxHeight = window.innerHeight * 0.65;
+      } else {
+        // Tablet and desktop
+        aspectRatio = 0.8;
+        minHeight = 500;
+        maxHeight = window.innerHeight * 0.7;
+      }
+      
+      const calculatedHeight = width * aspectRatio;
+      const height = Math.max(minHeight, Math.min(calculatedHeight, maxHeight));
+      
+      container.style.height = `${height}px`;
       
       // Also update the globe wrapper if it exists
       if (globeWrapperRef.current) {
-        globeWrapperRef.current.style.height = `${width * 0.75}px`;
+        globeWrapperRef.current.style.height = `${height}px`;
       }
-    });
+      
+      console.log(`Screen: ${screenWidth}px, Container: ${width}x${height}px, Mobile: ${isMobile}`);
+    };
     
-    // Start observing the container
+    // Create a resize observer
+    const resizeObserver = new ResizeObserver(updateSize);
     resizeObserver.observe(containerRef.current);
     
     // Handle initial size
-    const width = containerRef.current.clientWidth;
-    containerRef.current.style.height = `${width * 0.75}px`;
+    updateSize();
     
     return () => {
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [isMobile]);
+
   // Create arcs that represent food distribution routes
   const distributionRoutes = [
     // From major food production/export regions to food insecure regions
@@ -361,6 +400,7 @@ const regionTimeout = useRef(null);
     console.log("Globe loaded successfully");
     setIsLoading(false);
   };
+
   const sanitizeCoordinates = (data) => {
     return data.map(item => {
       const sanitized = {...item};
@@ -377,6 +417,7 @@ const regionTimeout = useRef(null);
       return sanitized;
     });
   };
+  
   const sanitizedGlobeData = sanitizeCoordinates(globeData);
 
   useEffect(() => {
@@ -386,7 +427,7 @@ const regionTimeout = useRef(null);
       if (!globeContainer) return;
       
       const globeRect = globeContainer.getBoundingClientRect();
-      const headerThreshold = 200; // Adjust this value as needed
+      const headerThreshold = isMobile ? 100 : 150;
       
       // Only show header when globe is in good view
       if (globeRect.top < headerThreshold && globeRect.bottom > headerThreshold) {
@@ -396,203 +437,294 @@ const regionTimeout = useRef(null);
       }
     };
 
+    // Initially show header
+    setIsHeaderVisible(true);
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isMobile]);
 
-    return (
-      <div className="relative w-full h-full bg-black">
-        {/* Globe header */}
-        <div
-          className={`absolute top-0 left-0 right-0 z-20 bg-black pb-4 pt-8 px-4 transition-opacity duration-300 ${
-            isHeaderVisible ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <h2 className="text-center text-3xl md:text-4xl font-bold text-white mb-6">
-            Food Insecurity Around the World
-          </h2>
-          <p className="text-center text-base md:text-lg font-normal text-neutral-200 max-w-md mx-auto mb-12">
-            Hover over highlighted regions to see hunger statistics.
-            <br />
-            Click on any region to make a donation and help end food insecurity.
-          </p>
-        </div>
-  
-        {/* Legend bar */}
-        <div
-          className={`absolute top-44 left-0 right-0 py-4 z-20 transition-opacity duration-300 ${
-            isHeaderVisible ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <div className="flex flex-wrap justify-center items-center gap-8">
-            <div className="flex items-center">
-              <div className="w-4 h-4 rounded-full bg-red-700 mr-3" />
-              <span className="text-white text-sm">Critical</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-4 h-4 rounded-full bg-red-600 mr-3" />
-              <span className="text-white text-sm">Severe</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-4 h-4 rounded-full bg-amber-500 mr-3" />
-              <span className="text-white text-sm">High</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-4 h-4 rounded-full bg-emerald-600 mr-3" />
-              <span className="text-white text-sm">Distribution Routes</span>
-            </div>
-          </div>
-        </div>
-  
-        {/* Globe container */}
-        <div className="w-full h-full bg-black">
-          {/* Region information tooltip */}
-          {visibleRegion && !showDonateModal && (
-  <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg z-30 w-80">
-    <h3 className="font-bold text-lg">{visibleRegion.region}</h3>
-    <div className="flex items-center mt-1">
+  return (
+    <div className="relative w-full min-h-screen bg-black" id="globe-container">
+      {/* Globe header */}
       <div
-        className="w-3 h-3 rounded-full mr-2"
-        style={{ backgroundColor: visibleRegion.color }}
-      />
-      <span className="font-medium">
-        {visibleRegion.insecurityLevel} Food Insecurity
-      </span>
-    </div>
-    <p className="mt-2 text-sm">{visibleRegion.description}</p>
-    <p className="mt-1 text-sm">
-      <strong>Affected:</strong> {visibleRegion.affectedPopulation} people
-    </p>
-    <p className="mt-1 text-sm">
-      <strong>Impact:</strong> {visibleRegion.donationImpact}
-    </p>
-    <button
-      onClick={() => setShowDonateModal(true)}
-      className="mt-3 w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-md transition-colors"
-    >
-      Donate Now
-    </button>
-  </div>
-)}
-  
-          {/* Actual Globe Component */}
-          <div className="w-full h-full pt-64">
-            <ErrorBoundary fallback={<div>Something went wrong</div>}>
-              <Suspense
-                fallback={
-                  <div className="flex items-center justify-center h-full">
-                    <div className="text-center p-8 bg-white/10 backdrop-blur-sm rounded-lg shadow-lg">
-                      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-600 mx-auto"></div>
-                      <p className="mt-4 text-lg font-medium text-white">
-                        Loading interactive globe...
-                      </p>
-                    </div>
-                  </div>
-                }
-              >
-                <World
-                  data={sanitizedGlobeData}
-                  globeConfig={globeConfig}
-                  onLoad={handleGlobeLoaded}
-                  onRegionClick={(region) => setSelectedRegion(region)}
-                />
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-  
-          {/* Bottom gradient overlay */}
-          <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent to-black z-10" />
-        </div>
-  
-        {/* Donation modal */}
-        {showDonateModal && selectedRegion && (
-  <div 
-    className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-    onClick={(e) => {
-      if (e.target === e.currentTarget) {
-        setShowDonateModal(false);
-        setDonationAmount(null);
-        setShowCustomAmount(false);
-      }
-    }}
-  >
-    <div 
-      className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full mx-4"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <h3 className="text-xl font-bold">Donate to {selectedRegion.region}</h3>
-      <p className="mt-2">{selectedRegion.description}</p>
-      <p className="mt-4 font-medium">How much would you like to donate?</p>
-
-      <div className="grid grid-cols-3 gap-3 mt-3">
-        {[10, 25, 50, 100, 250].map((amount) => (
-          <button
-            key={amount}
-            onClick={() => setDonationAmount(amount)}
-            className={`py-2 rounded-md transition-colors ${
-              donationAmount === amount 
-                ? "bg-emerald-100 border-2 border-emerald-600" 
-                : "bg-gray-100 hover:bg-emerald-100"
-            }`}
-          >
-            ${amount}
-          </button>
-        ))}
-        <button
-          onClick={() => setShowCustomAmount(true)}
-          className={`py-2 rounded-md transition-colors ${
-            showCustomAmount 
-              ? "bg-emerald-100 border-2 border-emerald-600" 
-              : "bg-gray-100 hover:bg-emerald-100"
-          }`}
-        >
-          Other
-        </button>
+        className={`absolute top-0 left-0 right-0 z-20 bg-black pb-4 pt-4 md:pt-8 px-4 transition-opacity duration-300 ${
+          isHeaderVisible ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <h2 className="text-center text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-6">
+          Food Insecurity Around the World
+        </h2>
+        <p className="text-center text-sm md:text-base lg:text-lg font-normal text-neutral-200 max-w-sm md:max-w-md mx-auto mb-6 md:mb-12 px-2">
+          {isMobile ? (
+            <>Tap regions to see hunger statistics and make donations.</>
+          ) : (
+            <>
+              Hover over highlighted regions to see hunger statistics.
+              <br />
+              Click on any region to make a donation and help end food insecurity.
+            </>
+          )}
+        </p>
       </div>
 
-      {showCustomAmount && (
-        <div className="mt-3">
-          <input
-            type="number"
-            placeholder="Enter amount"
-            value={donationAmount || ''}
-            onChange={(e) => setDonationAmount(Number(e.target.value))}
-            className="w-full border border-gray-300 rounded-md p-2"
-            min="1"
-          />
+      {/* Legend bar */}
+      <div
+        className={`absolute ${
+          isMobile ? 'top-32' : 'top-44'
+        } left-0 right-0 py-2 md:py-4 z-20 transition-opacity duration-300 ${
+          isHeaderVisible ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <div className={`flex ${
+          isMobile ? 'flex-col gap-2 items-center' : 'flex-wrap justify-center items-center gap-4 md:gap-8'
+        }`}>
+          {isMobile ? (
+            // Mobile: Two rows layout
+            <>
+              <div className="flex items-center justify-center gap-4">
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-red-700 mr-2" />
+                  <span className="text-white text-xs">Critical</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-red-600 mr-2" />
+                  <span className="text-white text-xs">Severe</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-center gap-4">
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-amber-500 mr-2" />
+                  <span className="text-white text-xs">High</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 rounded-full bg-emerald-600 mr-2" />
+                  <span className="text-white text-xs">Aid Routes</span>
+                </div>
+              </div>
+            </>
+          ) : (
+            // Desktop: Single row layout
+            <>
+              <div className="flex items-center">
+                <div className="w-4 h-4 rounded-full bg-red-700 mr-3 mt-5" />
+                <span className="text-white text-sm mt-5">Critical</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-4 h-4 rounded-full bg-red-600 mr-3 mt-5" />
+                <span className="text-white text-sm mt-5 ">Severe</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-4 h-4 rounded-full bg-amber-500 mr-3 mt-5" />
+                <span className="text-white text-sm mt-5">High</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-4 h-4 rounded-full bg-emerald-600 mr-3 mt-5" />
+                <span className="text-white text-sm mt-5">Distribution Routes</span>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Globe container */}
+      <div 
+        ref={containerRef}
+        className={`w-350 bg-black relative ${isMobile ? 'pt-44' : 'pt-72'}`}
+        style={{ minHeight: isMobile ? '350px' : '500px' }}
+      >
+        {/* Region information tooltip */}
+        {visibleRegion && !showDonateModal && (
+          <div className={`absolute ${
+            isMobile 
+              ? 'top-2 left-2 right-2 mx-auto' 
+              : 'top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+          } bg-white dark:bg-gray-800 p-3 md:p-4 rounded-lg shadow-lg z-30 ${
+            isMobile ? 'w-auto max-w-sm' : 'w-80'
+          }`}>
+            <h3 className={`font-bold ${isMobile ? 'text-base' : 'text-lg'}`}>
+              {visibleRegion.region}
+            </h3>
+            <div className="flex items-center mt-1">
+              <div
+                className="w-3 h-3 rounded-full mr-2"
+                style={{ backgroundColor: visibleRegion.color }}
+              />
+              <span className={`font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+                {visibleRegion.insecurityLevel} Food Insecurity
+              </span>
+            </div>
+            <p className={`mt-2 ${isMobile ? 'text-xs' : 'text-sm'}`}>
+              {visibleRegion.description}
+            </p>
+            <p className={`mt-1 ${isMobile ? 'text-xs' : 'text-sm'}`}>
+              <strong>Affected:</strong> {visibleRegion.affectedPopulation} people
+            </p>
+            <p className={`mt-1 ${isMobile ? 'text-xs' : 'text-sm'}`}>
+              <strong>Impact:</strong> {visibleRegion.donationImpact}
+            </p>
+            <button
+              onClick={() => {
+                setSelectedRegion(visibleRegion);
+                setShowDonateModal(true);
+              }}
+              className={`mt-3 w-full bg-emerald-600 hover:bg-emerald-700 text-white ${
+                isMobile ? 'py-1.5 px-3 text-sm' : 'py-2 px-4'
+              } rounded-md transition-colors`}
+            >
+              Donate Now
+            </button>
+          </div>
+        )}
+
+        {/* Actual Globe Component */}
+        <div ref={globeWrapperRef} className="w-full h-full">
+          <ErrorBoundary fallback={<div>Something went wrong</div>}>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center h-full">
+                  <div className={`text-center p-4 md:p-8 bg-white/10 backdrop-blur-sm rounded-lg shadow-lg ${
+                    isMobile ? 'max-w-xs' : ''
+                  }`}>
+                    <div className={`animate-spin rounded-full ${
+                      isMobile ? 'h-8 w-8' : 'h-10 w-10'
+                    } border-b-2 border-emerald-600 mx-auto`}></div>
+                    <p className={`mt-4 ${
+                      isMobile ? 'text-base' : 'text-lg'
+                    } font-medium text-white`}>
+                      Loading interactive globe...
+                    </p>
+                  </div>
+                </div>
+              }
+            >
+              <World
+                data={sanitizedGlobeData}
+                globeConfig={globeConfig}
+                onLoad={handleGlobeLoaded}
+                onRegionClick={(region) => {
+                  setSelectedRegion(region);
+                  setShowDonateModal(true);
+                }}
+              />
+            </Suspense>
+          </ErrorBoundary>
+        </div>
+
+        {/* Bottom gradient overlay */}
+        <div className="absolute w-full bottom-0 inset-x-0 h-20 md:h-40 bg-gradient-to-b pointer-events-none select-none from-transparent to-black z-10" />
+      </div>
+
+      {/* Donation modal */}
+      {showDonateModal && selectedRegion && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowDonateModal(false);
+              setDonationAmount(null);
+              setShowCustomAmount(false);
+            }
+          }}
+        >
+          <div 
+            className={`bg-white dark:bg-gray-800 p-4 md:p-6 rounded-lg shadow-xl ${
+              isMobile ? 'w-full max-w-sm' : 'max-w-md w-full'
+            }`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold`}>
+              Donate to {selectedRegion.region}
+            </h3>
+            <p className={`mt-2 ${isMobile ? 'text-sm' : 'text-base'}`}>
+              {selectedRegion.description}
+            </p>
+            <p className={`mt-4 font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+              How much would you like to donate?
+            </p>
+
+            <div className={`grid ${
+              isMobile ? 'grid-cols-2 gap-2' : 'grid-cols-3 gap-3'
+            } mt-3`}>
+              {[10, 25, 50, 100, 250].map((amount) => (
+                <button
+                  key={amount}
+                  onClick={() => setDonationAmount(amount)}
+                  className={`${
+                    isMobile ? 'py-1.5 text-sm' : 'py-2'
+                  } rounded-md transition-colors ${
+                    donationAmount === amount 
+                      ? "bg-emerald-100 border-2 border-emerald-600" 
+                      : "bg-gray-100 hover:bg-emerald-100"
+                  }`}
+                >
+                  ${amount}
+                </button>
+              ))}
+              <button
+                onClick={() => setShowCustomAmount(true)}
+                className={`${
+                  isMobile ? 'py-1.5 text-sm' : 'py-2'
+                } rounded-md transition-colors ${
+                  showCustomAmount 
+                    ? "bg-emerald-100 border-2 border-emerald-600" 
+                    : "bg-gray-100 hover:bg-emerald-100"
+                }`}
+              >
+                Other
+              </button>
+            </div>
+
+            {showCustomAmount && (
+              <div className="mt-3">
+                <input
+                  type="number"
+                  placeholder="Enter amount"
+                  value={donationAmount || ''}
+                  onChange={(e) => setDonationAmount(Number(e.target.value))}
+                  className={`w-full border border-gray-300 rounded-md ${
+                    isMobile ? 'p-1.5 text-sm' : 'p-2'
+                  }`}
+                  min="1"
+                />
+              </div>
+            )}
+
+            <p className={`mt-4 ${isMobile ? 'text-xs' : 'text-sm'}`}>
+              {selectedRegion.donationImpact}
+            </p>
+
+            <div className={`flex mt-6 ${isMobile ? 'space-x-2' : 'space-x-3'}`}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDonateModal(false);
+                  setDonationAmount(null);
+                  setShowCustomAmount(false);
+                }}
+                className={`flex-1 bg-gray-200 hover:bg-gray-300 ${
+                  isMobile ? 'py-1.5 px-3 text-sm' : 'py-2 px-4'
+                } rounded-md transition-colors`}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDonate}
+                disabled={!donationAmount}
+                className={`flex-1 ${
+                  isMobile ? 'py-1.5 px-3 text-sm' : 'py-2 px-4'
+                } rounded-md transition-colors ${
+                  donationAmount 
+                    ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
+                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                }`}
+              >
+                Donate Now
+              </button>
+            </div>
+          </div>
         </div>
       )}
-
-      <p className="mt-4 text-sm">{selectedRegion.donationImpact}</p>
-
-      <div className="flex mt-6 space-x-3">
-        <button
-         // In the donation modal's cancel button
-onClick={(e) => {
-  e.stopPropagation(); // Prevent event from bubbling up
-  setShowDonateModal(false);
-  setDonationAmount(null);
-  setShowCustomAmount(false);
-}}
-          className="flex-1 bg-gray-200 hover:bg-gray-300 py-2 px-4 rounded-md transition-colors"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleDonate}
-          disabled={!donationAmount}
-          className={`flex-1 py-2 px-4 rounded-md transition-colors ${
-            donationAmount 
-              ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
-              : "bg-gray-400 text-gray-200 cursor-not-allowed"
-          }`}
-        >
-          Donate Now
-        </button>
-      </div>
     </div>
-  </div>
-)}
-      </div>
-    );
+  );
 };

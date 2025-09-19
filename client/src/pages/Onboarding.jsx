@@ -399,7 +399,7 @@ const Onboarding = () => {
       <div className="bg-white/80 backdrop-blur-sm p-6 shadow-lg rounded-lg w-full max-w-lg overflow-y-auto max-h-[90vh] custom-scrollbar">
           <form onSubmit={handleSubmit} className="relative z-10">
             <h2 className="text-2xl font-bold text-center mb-6 text-green-600">
-              Complete Your FoodLoop Profile
+              Complete Your MealChain Profile
             </h2>
             
             {/* Progress indicator */}
@@ -439,7 +439,7 @@ const Onboarding = () => {
             <div className="bg-white/60 backdrop-blur-sm p-8 rounded-lg shadow-lg">
               <h2 className="text-xl font-bold text-green-600 mb-4">Join our Food Rescue Mission</h2>
               <p className="text-gray-700 mb-3">
-                FoodLoop connects food donors with NGOs and volunteers to reduce food waste and fight hunger.
+                MealChain connects food donors with NGOs and volunteers to reduce food waste and fight hunger.
               </p>
               <p className="text-gray-700 mb-3">
                 Please complete your profile to get started with your role in our community.

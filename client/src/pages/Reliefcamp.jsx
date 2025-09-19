@@ -62,7 +62,7 @@ export default function Reliefcamp() {
       setTimeout(() => {
         setIndex((prev) => (prev + 1) % images.length);
         setFade(true);
-      }, 500);
+      }, 1000);
     }, 3000);
 
     // Use while integration......
@@ -77,6 +77,21 @@ export default function Reliefcamp() {
 
     return () => clearInterval(interval);
   }, []);
+  const [scrolled, setScrolled] = useState(false);
+
+useEffect(() => {
+  const handleScroll = () => {
+    if (window.scrollY > 10) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
 
   return (
     <div className="flex w-full min-h-screen font-sans">
@@ -92,21 +107,26 @@ export default function Reliefcamp() {
           <Header />
         </div>
 
-        {/* Hero Section */}
-        <section className="w-full flex flex-col lg:flex-row items-center justify-between relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 mt-[0px]">
-          {/* Left Content */}
-          <div className="w-full lg:w-1/2 flex items-center px-6 sm:px-8 lg:px-12 py-8 lg:py-0 z-10">
-            <div className="bg-white/80 backdrop-blur-sm shadow-2xl rounded-3xl p-6 sm:p-8 lg:p-12 max-w-2xl w-full transition-all duration-300 border border-gray-100 hover:shadow-3xl">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-800 mb-6 leading-relaxed break-words font-serif">
-                Empower Relief with Impact
-              </h1>
-              <p className="text-base sm:text-lg lg:text-xl text-gray-700 font-medium leading-relaxed tracking-wide">
-                Support regions in need by staying informed. Every second counts when
-                it comes to disaster response. Stay aware, act fast, and empower
-                communities through informed action.
-              </p>
-            </div>
-          </div>
+        {/* Hero Section - Added pt-4 to push content below sticky header */}
+        <section className="w-full flex flex-col lg:flex-row items-center justify-between relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 pt-4">
+         {/* Left Content */}
+<div className="w-full lg:w-1/2 flex items-center px-6 sm:px-8 lg:px-12 py-8 lg:py-12 z-10">
+  <div
+    className={`bg-white/80 backdrop-blur-sm shadow-2xl rounded-3xl p-6 sm:p-8 lg:p-12 max-w-2xl w-full transition-all duration-100 border border-gray-100 hover:shadow-3xl mt-4
+      ${scrolled ? "opacity-0 translate-y-10 pointer-events-none" : "opacity-100 translate-y-0"}
+    `}
+  >
+    <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-800 mb-6 leading-relaxed break-words font-serif">
+      Empower Relief with Impact
+    </h1>
+    <p className="text-base sm:text-lg lg:text-xl text-gray-700 font-medium leading-relaxed tracking-wide">
+      Support regions in need by staying informed. Every second counts when
+      it comes to disaster response. Stay aware, act fast, and empower
+      communities through informed action.
+    </p>
+  </div>
+</div>
+
 
           {/* Right Image Section */}
           <div className="w-full lg:w-1/2 h-64 sm:h-80 lg:h-screen relative z-0">

@@ -90,7 +90,7 @@ const ImpactReportPage = () => {
             {/* 3D Card Feature */}
             <div className="flex justify-center mb-12">
               <Card 
-                title="FOODLOOP IMPACT" 
+                title="FOODCHAIN IMPACT" 
                 description={`${impactStats.totalWeight ? impactStats.totalWeight.toLocaleString() : '...'} kg of food saved, preventing ${impactStats.estimatedCO2Saved ? impactStats.estimatedCO2Saved.toLocaleString() : '...'} kg CO₂ emissions`}
                 imgSrc="/logo.png"
               />

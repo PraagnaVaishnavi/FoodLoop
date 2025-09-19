@@ -127,7 +127,7 @@ const DonationMap = () => {
           <div className="p-4 bg-white dark:bg-neutral-900 shadow-sm">
           <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-emerald-500 via-emerald-400 to-blue-500 text-transparent bg-clip-text">
-  🍛 FoodLoop Donation Map
+  🍛 MealChain Donation Map
 </h1>
 
             <div className="bg-emerald-50 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-100 px-4 py-2 rounded-lg flex items-center">

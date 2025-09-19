@@ -98,7 +98,7 @@ const AboutSection = () => {
               </span>
 
               <p className="text-lg md:text-2xl font-merriweather  leading-relaxed relative ">
-                FoodLoop is an AI-driven platform connecting food donors with
+                MealChain is an AI-driven platform connecting food donors with
                 NGOs in real time, reducing waste and maximizing impact. With
                 smart matching, blockchain transparency, and predictive
                 analytics, it ensures efficient redistribution. Optimized

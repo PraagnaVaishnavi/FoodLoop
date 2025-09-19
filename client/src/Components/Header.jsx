@@ -65,9 +65,9 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-amber-500 to-orange-400 shadow-lg">
+    <header className="sticky top-0 mt-0 z-50 bg-gradient-to-r from-amber-500 to-orange-400 shadow-lg ">
       <div className="flex items-center justify-between px-6 py-4">
-        <h1 className="text-2xl font-bold text-white tracking-wide">FoodLoop Dashboard</h1>
+        <h1 className="text-2xl font-bold text-white tracking-wide">MealChain Dashboard</h1>
 
         <div className="flex items-center space-x-3">
           <div className="relative">
@@ -117,17 +117,17 @@ const Header = () => {
 
       {/* Tab Navigation */}
       <nav className="relative flex px-6 border-t border-white/20 bg-white/10">
-        {tabs.map((tab) => (
-          <button
-            key={tab.path}
-            onClick={() => navigate(tab.path)}
-            className={`relative px-4 py-3 text-sm font-medium transition-all ${
-              location.pathname === tab.path
-                ? "text-white border-b-2 border-white"
-                : "text-white/80 hover:text-white"
-            }`}
-          >
-            {tab.name}
+       {tabs.map((tab) => (
+    <button
+      key={tab.path}
+      onClick={() => navigate(tab.path)}
+      className={`relative pl-2 px-5 py-3 text-sm font-medium transition-all ${
+        location.pathname === tab.path
+          ? "text-white border-b-1 border-white"
+          : "text-white/80 hover:text-white"
+      }`}
+    >
+      {tab.name}
           </button>
         ))}
 

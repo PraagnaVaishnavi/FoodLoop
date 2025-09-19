@@ -111,7 +111,7 @@ const ChatbotWidget = () => {
           className="fixed bottom-28 right-6 w-80 h-96 bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden z-40"
         >
           <div className="bg-colour1 text-white p-4 text-lg font-semibold">
-            🤖 FoodLoop AI Chat
+            🤖 MealChain AI Chat
           </div>
           
           {/* Messages display area - replaced static content with dynamic messages */}

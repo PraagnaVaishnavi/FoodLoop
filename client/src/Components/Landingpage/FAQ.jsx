@@ -6,17 +6,17 @@ gsap.registerPlugin(ScrollTrigger);
 
 const faqData = [
   {
-    question: "What is FoodLoop and how does it work?",
+    question: "What is MealChain and how does it work?",
     answer:
-      "FoodLoop is a platform that connects food donors with NGOs to ensure surplus food reaches those in need. We use a smart tracking system to optimize pickups and deliveries.",
+      "MealChain is a platform that connects food donors with NGOs to ensure surplus food reaches those in need. We use a smart tracking system to optimize pickups and deliveries.",
   },
   {
-    question: "Is FoodLoop free to use?",
+    question: "Is MealChain free to use?",
     answer:
-      "Yes! FoodLoop is completely free for both donors and NGOs. Our mission is to eliminate food waste and fight hunger through seamless technology.",
+      "Yes! MealChain is completely free for both donors and NGOs. Our mission is to eliminate food waste and fight hunger through seamless technology.",
   },
   {
-    question: "How does FoodLoop ensure food safety?",
+    question: "How does MealChain ensure food safety?",
     answer:
       "We work with certified partners and volunteers who follow strict hygiene protocols during collection, storage, and distribution.",
   },
@@ -26,7 +26,7 @@ const faqData = [
       "Absolutely. Our dashboard gives real-time stats on meals donated, areas served, and the environmental impact of your contributions.",
   },
   {
-    question: "Why did the tomato join FoodLoop?",
+    question: "Why did the tomato join MealChain?",
     answer:
       "Because it didn’t want to ketchup with waste! (Okay, that was a fun one—but hey, even veggies deserve a second chance!)",
   },
@@ -88,7 +88,7 @@ const FaqSection = () => {
               Frequently<br />asked questions
             </h2>
             <p className="mt-1 hidden md:block font-merriweather text-gray-900">
-              Answers to the most common questions about FoodLoop.
+              Answers to the most common questions about MealChain.
             </p>
           </div>
         </div>

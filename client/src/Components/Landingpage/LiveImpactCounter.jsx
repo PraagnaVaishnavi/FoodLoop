@@ -77,7 +77,7 @@ const LiveImpactCounter = ({ target = 1000, duration = 2 }) => {
         {count.toLocaleString()}
       </p>
       <p className="text-3xl  md:text-4xl font-semibold  text-black mt-2 md:mt-0">
-        Meals Donated Through FoodLoop
+        Meals Donated Through MealChain
       </p>
     </div>
   );

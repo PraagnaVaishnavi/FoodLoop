@@ -269,7 +269,7 @@ razorpay.on('checkout.dismiss', function(){
             <h3 className="text-xl font-semibold text-colour4 mb-4 font-merriweather">About Our Donation Fund</h3>
             
             <p className="text-gray-700 mb-4">
-              This fund is going to the FoodLoop owner, who by non-repudiation will distribute it to needy NGOs or social work.
+              This fund is going to the MealChain owner, who by non-repudiation will distribute it to needy NGOs or social work.
             </p>
             
             <p className="text-gray-700 mb-4">
